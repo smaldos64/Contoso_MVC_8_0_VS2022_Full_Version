@@ -21,22 +21,53 @@ namespace Contoso_MVC_8_0_VS2022.Controllers
             _context = context;
         }
 
-        // GET: Instructors
-        public async Task<IActionResult> Index(int? id, int? courseID)
-        {
-            //return View(await _context.Instructors.ToListAsync());
+    // Eager Loading
+    // GET: Instructors
+    //public async Task<IActionResult> Index(int? id, int? courseID)
+    //{
+    //    //return View(await _context.Instructors.ToListAsync());
 
+    //    var viewModel = new InstructorIndexData();
+    //    viewModel.Instructors = await _context.Instructors
+    //          .Include(i => i.OfficeAssignment)
+    //          .Include(i => i.CourseAssignments)
+    //            .ThenInclude(i => i.Course)
+    //                .ThenInclude(i => i.Enrollments)
+    //                    .ThenInclude(i => i.Student)
+    //          .Include(i => i.CourseAssignments)
+    //            .ThenInclude(i => i.Course)
+    //                .ThenInclude(i => i.Department)
+    //          .AsNoTracking()
+    //          .OrderBy(i => i.LastName)
+    //          .ToListAsync();
+
+    //    if (id != null)
+    //    {
+    //      ViewData["InstructorID"] = id.Value;
+    //      Instructor instructor = viewModel.Instructors.Where(
+    //          i => i.ID == id.Value).Single();
+    //      viewModel.Courses = instructor.CourseAssignments.Select(s => s.Course);
+    //    }
+
+    //    if (courseID != null)
+    //    {
+    //      ViewData["CourseID"] = courseID.Value;
+    //      viewModel.Enrollments = viewModel.Courses.Where(
+    //          x => x.CourseID == courseID).Single().Enrollments;
+    //    }
+
+    //    return View(viewModel);
+    //  }
+
+          // Explicit Loading
+          public async Task<IActionResult> Index(int? id, int? courseID)
+          {
             var viewModel = new InstructorIndexData();
             viewModel.Instructors = await _context.Instructors
                   .Include(i => i.OfficeAssignment)
                   .Include(i => i.CourseAssignments)
                     .ThenInclude(i => i.Course)
-                        .ThenInclude(i => i.Enrollments)
-                            .ThenInclude(i => i.Student)
-                  .Include(i => i.CourseAssignments)
-                    .ThenInclude(i => i.Course)
                         .ThenInclude(i => i.Department)
-                  .AsNoTracking()
                   .OrderBy(i => i.LastName)
                   .ToListAsync();
 
@@ -51,8 +82,13 @@ namespace Contoso_MVC_8_0_VS2022.Controllers
             if (courseID != null)
             {
               ViewData["CourseID"] = courseID.Value;
-              viewModel.Enrollments = viewModel.Courses.Where(
-                  x => x.CourseID == courseID).Single().Enrollments;
+              var selectedCourse = viewModel.Courses.Where(x => x.CourseID == courseID).Single();
+              await _context.Entry(selectedCourse).Collection(x => x.Enrollments).LoadAsync();
+              foreach (Enrollment enrollment in selectedCourse.Enrollments)
+              {
+                await _context.Entry(enrollment).Reference(x => x.Student).LoadAsync();
+              }
+              viewModel.Enrollments = selectedCourse.Enrollments;
             }
 
             return View(viewModel);
