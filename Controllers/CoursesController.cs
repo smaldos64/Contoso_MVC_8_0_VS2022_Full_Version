@@ -72,6 +72,7 @@ namespace Contoso_MVC_8_0_VS2022.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("CourseID,Title,Credits,DepartmentID")] Course course)
         {
+            // LTPE !!!
             //if (ModelState.IsValid)
             //{
                 _context.Add(course);
@@ -113,6 +114,7 @@ namespace Contoso_MVC_8_0_VS2022.Controllers
               return NotFound();
             }
 
+            // LTPE !!!
             //if (ModelState.IsValid)
             //{
               try

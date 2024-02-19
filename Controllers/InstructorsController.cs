@@ -142,7 +142,11 @@ namespace Contoso_MVC_8_0_VS2022.Controllers
                 return NotFound();
             }
 
-            var instructor = await _context.Instructors.FindAsync(id);
+            //var instructor = await _context.Instructors.FindAsync(id);
+            var instructor = await _context.Instructors
+              .Include(i => i.OfficeAssignment)
+              .AsNoTracking()
+              .FirstOrDefaultAsync(m => m.ID == id);
             if (instructor == null)
             {
                 return NotFound();
@@ -155,39 +159,77 @@ namespace Contoso_MVC_8_0_VS2022.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,LastName,FirstMidName,HireDate")] Instructor instructor)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,LastName,FirstMidName,HireDate,OfficeAssignment.Location")] Instructor instructor)
         {
-            if (id != instructor.ID)
-            {
-                return NotFound();
-            }
+          if (id != instructor.ID)
+          {
+            return NotFound();
+          }
 
-            if (ModelState.IsValid)
+          //if (ModelState.IsValid)
+          //{
+            try
             {
-                try
-                {
-                    _context.Update(instructor);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!InstructorExists(instructor.ID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+              _context.Update(instructor);
+              await _context.SaveChangesAsync();
             }
-            return View(instructor);
+            catch (DbUpdateConcurrencyException)
+            {
+              if (!InstructorExists(instructor.ID))
+              {
+                return NotFound();
+              }
+              else
+              {
+                throw;
+              }
+            }
+            return RedirectToAction(nameof(Index));
+          //}
+          //return View(instructor);
         }
 
-        // GET: Instructors/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
+    //[HttpPost, ActionName("Edit")]
+    //[ValidateAntiForgeryToken]
+    //public async Task<IActionResult> EditPost(int? id)
+    //{
+    //  if (id == null)
+    //  {
+    //    return NotFound();
+    //  }
+
+    //  var instructorToUpdate = await _context.Instructors
+    //      .Include(i => i.OfficeAssignment)
+    //      .FirstOrDefaultAsync(s => s.ID == id);
+
+    //  if (await TryUpdateModelAsync<Instructor>(
+    //      instructorToUpdate,
+    //      "",
+    //      i => i.FirstMidName, i => i.LastName, i => i.HireDate, i => i.OfficeAssignment))
+    //  {
+    //    if (String.IsNullOrWhiteSpace(instructorToUpdate.OfficeAssignment?.Location))
+    //    {
+    //      instructorToUpdate.OfficeAssignment = null;
+    //    }
+    //    try
+    //    {
+    //      await _context.SaveChangesAsync();
+    //    }
+    //    catch (DbUpdateException /* ex */)
+    //    {
+    //      //Log the error (uncomment ex variable name and write a log.)
+    //      ModelState.AddModelError("", "Unable to save changes. " +
+    //          "Try again, and if the problem persists, " +
+    //          "see your system administrator.");
+    //    }
+    //    return RedirectToAction(nameof(Index));
+    //  }
+    //  return View(instructorToUpdate);
+    //}
+
+    // GET: Instructors/Delete/5
+    public async Task<IActionResult> Delete(int? id)
+          {
             if (id == null)
             {
                 return NotFound();
