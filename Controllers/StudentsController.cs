@@ -106,8 +106,10 @@ namespace Contoso_MVC_8_0_VS2022.Controllers
 
           ViewData["CurrentFilter"] = searchString;
 
-          var students = from s in _context.Students
-                         select s;
+          //var students = from s in _context.Students
+          //               select s;
+          IQueryable<Student> students = from s in _context.Students
+                                         select s;
           if (!String.IsNullOrEmpty(searchString))
           {
             students = students.Where(s => s.LastName.Contains(searchString)

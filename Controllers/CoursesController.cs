@@ -22,9 +22,20 @@ namespace Contoso_MVC_8_0_VS2022.Controllers
         // GET: Courses
         public async Task<IActionResult> Index()
         {
-            var schoolContext = _context.Courses.Include(c => c.Department);
-            return View(await schoolContext.ToListAsync());
-        }
+          //var schoolContext = _context.Courses.Include(c => c.Department);
+          //return View(await schoolContext.ToListAsync());
+          //var courses = _context.Courses
+          //  .Include(c => c.Department)
+          //  .AsNoTracking();
+          //IQueryable<Course> courses = _context.Courses
+          //  .Include(c => c.Department)
+          //  .AsNoTracking();
+          // return View(await courses.ToListAsync());
+          IEnumerable<Course> courses = _context.Courses
+            .Include(c => c.Department)
+            .AsNoTracking();
+          return View(courses);
+    }
 
         // GET: Courses/Details/5
         public async Task<IActionResult> Details(int? id)
