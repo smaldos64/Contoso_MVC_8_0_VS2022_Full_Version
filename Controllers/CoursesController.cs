@@ -72,16 +72,15 @@ namespace Contoso_MVC_8_0_VS2022.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("CourseID,Title,Credits,DepartmentID")] Course course)
         {
-            // LTPE !!!
-            //if (ModelState.IsValid)
-            //{
+           if (ModelState.IsValid)
+           {
                 _context.Add(course);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-            //}
+            }
            
-            //PopulateDepartmentsDropDownList(course.DepartmentID);
-            //return View(course);
+            PopulateDepartmentsDropDownList(course.DepartmentID);
+            return View(course);
         }
 
         // GET: Courses/Edit/5
@@ -102,76 +101,76 @@ namespace Contoso_MVC_8_0_VS2022.Controllers
             return View(course);
         }
 
-          // POST: Courses/Edit/5
-          // To protect from overposting attacks, enable the specific properties you want to bind to.
-          // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-          [HttpPost]
-          [ValidateAntiForgeryToken]
-          public async Task<IActionResult> Edit(int id, [Bind("CourseID,Title,Credits,DepartmentID")] Course course)
-          {
-            if (id != course.CourseID)
-            {
-              return NotFound();
-            }
-
-            // LTPE !!!
-            //if (ModelState.IsValid)
-            //{
-              try
-              {
-                _context.Update(course);
-                await _context.SaveChangesAsync();
-              }
-              catch (DbUpdateConcurrencyException)
-              {
-                if (!CourseExists(course.CourseID))
-                {
-                  return NotFound();
-                }
-                else
-                {
-                  throw;
-                }
-              }
-              return RedirectToAction(nameof(Index));
-            //}
-            ////ViewData["DepartmentID"] = new SelectList(_context.Departments, "DepartmentID", "DepartmentID", course.DepartmentID);
-            //PopulateDepartmentsDropDownList(course.DepartmentID);
-            //return View(course);
-          }
-
-    //[HttpPost, ActionName("Edit")]
+    // POST: Courses/Edit/5
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+    //[HttpPost]
     //[ValidateAntiForgeryToken]
-    //public async Task<IActionResult> EditPost(int? id)
+    //public async Task<IActionResult> Edit(int id, [Bind("CourseID,Title,Credits,DepartmentID")] Course course)
     //{
-    //  if (id == null)
+    //  if (id != course.CourseID)
     //  {
     //    return NotFound();
     //  }
 
-    //  var courseToUpdate = await _context.Courses
-    //      .FirstOrDefaultAsync(c => c.CourseID == id);
-
-    //  if (await TryUpdateModelAsync<Course>(courseToUpdate,
-    //      "",
-    //      c => c.Credits, c => c.DepartmentID, c => c.Title))
-    //  {
+    //  // LTPE !!!
+    //  //if (ModelState.IsValid)
+    //  //{
     //    try
     //    {
+    //      _context.Update(course);
     //      await _context.SaveChangesAsync();
     //    }
-    //    catch (DbUpdateException /* ex */)
+    //    catch (DbUpdateConcurrencyException)
     //    {
-    //      //Log the error (uncomment ex variable name and write a log.)
-    //      ModelState.AddModelError("", "Unable to save changes. " +
-    //          "Try again, and if the problem persists, " +
-    //          "see your system administrator.");
+    //      if (!CourseExists(course.CourseID))
+    //      {
+    //        return NotFound();
+    //      }
+    //      else
+    //      {
+    //        throw;
+    //      }
     //    }
     //    return RedirectToAction(nameof(Index));
-    //  }
-    //  PopulateDepartmentsDropDownList(courseToUpdate.DepartmentID);
-    //  return View(courseToUpdate);
+    //  //}
+    //  ////ViewData["DepartmentID"] = new SelectList(_context.Departments, "DepartmentID", "DepartmentID", course.DepartmentID);
+    //  //PopulateDepartmentsDropDownList(course.DepartmentID);
+    //  //return View(course);
     //}
+
+        [HttpPost, ActionName("Edit")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditPost(int? id)
+        {
+          if (id == null)
+          {
+            return NotFound();
+          }
+
+          var courseToUpdate = await _context.Courses
+              .FirstOrDefaultAsync(c => c.CourseID == id);
+
+          if (await TryUpdateModelAsync<Course>(courseToUpdate,
+              "",
+              c => c.Credits, c => c.DepartmentID, c => c.Title))
+          {
+            try
+            {
+              await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException /* ex */)
+            {
+              //Log the error (uncomment ex variable name and write a log.)
+              ModelState.AddModelError("", "Unable to save changes. " +
+                  "Try again, and if the problem persists, " +
+                  "see your system administrator.");
+            }
+            return RedirectToAction(nameof(Index));
+          }
+          PopulateDepartmentsDropDownList(courseToUpdate.DepartmentID);
+          return View(courseToUpdate);
+        }
 
     // GET: Courses/Delete/5
     public async Task<IActionResult> Delete(int? id)
