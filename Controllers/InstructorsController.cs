@@ -112,47 +112,36 @@ namespace Contoso_MVC_8_0_VS2022.Controllers
       return View(instructor);
     }
 
-    // GET: Instructors/Create
     public IActionResult Create()
     {
+      var instructor = new Instructor();
+      instructor.CourseAssignments = new List<CourseAssignment>();
+      PopulateAssignedCourseData(instructor);
       return View();
     }
 
-    // POST: Instructors/Create
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("ID,LastName,FirstMidName,HireDate")] Instructor instructor)
+    public async Task<IActionResult> Create([Bind("FirstMidName,HireDate,LastName,OfficeAssignment")] Instructor instructor, string[] selectedCourses)
     {
+      if (selectedCourses != null)
+      {
+        instructor.CourseAssignments = new List<CourseAssignment>();
+        foreach (var course in selectedCourses)
+        {
+          var courseToAdd = new CourseAssignment { InstructorID = instructor.ID, CourseID = int.Parse(course) };
+          instructor.CourseAssignments.Add(courseToAdd);
+        }
+      }
       if (ModelState.IsValid)
       {
         _context.Add(instructor);
         await _context.SaveChangesAsync();
         return RedirectToAction(nameof(Index));
       }
+      PopulateAssignedCourseData(instructor);
       return View(instructor);
     }
-
-    // GET: Instructors/Edit/5
-    //public async Task<IActionResult> Edit(int? id)
-    //{
-    //    if (id == null)
-    //    {
-    //        return NotFound();
-    //    }
-
-    //    //var instructor = await _context.Instructors.FindAsync(id);
-    //    var instructor = await _context.Instructors
-    //      .Include(i => i.OfficeAssignment)
-    //      .AsNoTracking()
-    //      .FirstOrDefaultAsync(m => m.ID == id);
-    //    if (instructor == null)
-    //    {
-    //        return NotFound();
-    //    }
-    //    return View(instructor);
-    //}
 
     public async Task<IActionResult> Edit(int? id)
     {
@@ -174,96 +163,6 @@ namespace Contoso_MVC_8_0_VS2022.Controllers
       return View(instructor);
     }
 
-
-    // POST: Instructors/Edit/5
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-    //  [HttpPost]
-    //  [ValidateAntiForgeryToken]
-    //  public async Task<IActionResult> Edit(int id, [Bind("ID,LastName,FirstMidName,HireDate,OfficeAssignment.Location")] Instructor instructor)
-    //  {
-    //    if (id != instructor.ID)
-    //    {
-    //      return NotFound();
-    //    }
-
-    //    if (ModelState.IsValid)
-    //    {
-    //      try
-    //      {
-    //        _context.Update(instructor);
-    //        await _context.SaveChangesAsync();
-    //      }
-    //      catch (DbUpdateConcurrencyException)
-    //      {
-    //        if (!InstructorExists(instructor.ID))
-    //        {
-    //          return NotFound();
-    //        }
-    //        else
-    //        {
-    //          throw;
-    //        }
-    //      }
-    //      return RedirectToAction(nameof(Index));
-    //    }
-    //    return View(instructor);
-    //}
-
-    //[HttpPost, ActionName("Edit")]
-    //[ValidateAntiForgeryToken]
-    //public async Task<IActionResult> EditPost(int? id)
-    //{
-    //  if (id == null)
-    //  {
-    //    return NotFound();
-    //  }
-
-    //  var instructorToUpdate = await _context.Instructors
-    //      .Include(i => i.OfficeAssignment)
-    //      .FirstOrDefaultAsync(s => s.ID == id);
-
-    //  // LTPE
-    //  //if ( (instructorToUpdate != null) && (instructorToUpdate.OfficeAssignment == null) )
-    //  //{
-    //  //  instructorToUpdate.OfficeAssignment = new OfficeAssignment();
-    //  //}
-
-    //  // LTPE 
-    //  // Fjernet check på retur værdi, da den giver false, hvis OfficeAssignment
-    //  // ikke var sat før. I praksis virkder det alligevel.
-    //  await TryUpdateModelAsync<Instructor>(
-    //  instructorToUpdate,
-    //  "",
-    //  i => i.FirstMidName, i => i.LastName, i => i.HireDate, i => i.OfficeAssignment);
-
-    //  //if (await TryUpdateModelAsync<Instructor>(
-    //  //    instructorToUpdate,
-    //  //    "",
-    //  //    i => i.FirstMidName, i => i.LastName, i => i.HireDate, i => i.OfficeAssignment))
-    //  //{
-    //  if (String.IsNullOrWhiteSpace(instructorToUpdate.OfficeAssignment?.Location))
-    //  {
-    //    instructorToUpdate.OfficeAssignment = null;
-    //  }
-    //  try
-    //  {
-    //    await _context.SaveChangesAsync();
-    //    // LTPE herunder
-    //    return RedirectToAction(nameof(Index));
-    //  }
-    //  catch (DbUpdateException /* ex */)
-    //  {
-    //    //Log the error (uncomment ex variable name and write a log.)
-    //    ModelState.AddModelError("", "Unable to save changes. " +
-    //        "Try again, and if the problem persists, " +
-    //        "see your system administrator.");
-    //  }
-    //  return RedirectToAction(nameof(Index));
-    //  //}
-    //  //return View(instructorToUpdate);
-    //}
-
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int? id, string[] selectedCourses)
@@ -279,26 +178,28 @@ namespace Contoso_MVC_8_0_VS2022.Controllers
               .ThenInclude(i => i.Course)
           .FirstOrDefaultAsync(m => m.ID == id);
 
-      await TryUpdateModelAsync<Instructor>(
+      if (await TryUpdateModelAsync<Instructor>(
           instructorToUpdate,
           "",
-          i => i.FirstMidName, i => i.LastName, i => i.HireDate, i => i.OfficeAssignment);
-      if (String.IsNullOrWhiteSpace(instructorToUpdate.OfficeAssignment?.Location))
+          i => i.FirstMidName, i => i.LastName, i => i.HireDate, i => i.OfficeAssignment))
       {
-        instructorToUpdate.OfficeAssignment = null;
-      }
-      UpdateInstructorCourses(selectedCourses, instructorToUpdate);
-      try
-      {
-        await _context.SaveChangesAsync();
+        if (String.IsNullOrWhiteSpace(instructorToUpdate.OfficeAssignment?.Location))
+        {
+          instructorToUpdate.OfficeAssignment = null;
+        }
+        UpdateInstructorCourses(selectedCourses, instructorToUpdate);
+        try
+        {
+          await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateException /* ex */)
+        {
+          //Log the error (uncomment ex variable name and write a log.)
+          ModelState.AddModelError("", "Unable to save changes. " +
+              "Try again, and if the problem persists, " +
+              "see your system administrator.");
+        }
         return RedirectToAction(nameof(Index));
-      }
-      catch (DbUpdateException /* ex */)
-      {
-        //Log the error (uncomment ex variable name and write a log.)
-        ModelState.AddModelError("", "Unable to save changes. " +
-            "Try again, and if the problem persists, " +
-            "see your system administrator.");
       }
       UpdateInstructorCourses(selectedCourses, instructorToUpdate);
       PopulateAssignedCourseData(instructorToUpdate);
@@ -323,16 +224,20 @@ namespace Contoso_MVC_8_0_VS2022.Controllers
       return View(instructor);
     }
 
-    // POST: Instructors/Delete/5
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
-      var instructor = await _context.Instructors.FindAsync(id);
-      if (instructor != null)
-      {
-        _context.Instructors.Remove(instructor);
-      }
+      Instructor instructor = await _context.Instructors
+          .Include(i => i.CourseAssignments)
+          .SingleAsync(i => i.ID == id);
+
+      var departments = await _context.Departments
+          .Where(d => d.InstructorID == id)
+          .ToListAsync();
+      departments.ForEach(d => d.InstructorID = null);
+
+      _context.Instructors.Remove(instructor);
 
       await _context.SaveChangesAsync();
       return RedirectToAction(nameof(Index));
