@@ -26,24 +26,46 @@ namespace Contoso_MVC_8_0_VS2022.Controllers
             return View(await schoolContext.ToListAsync());
         }
 
-        // GET: Departments/Details/5
+    // GET: Departments/Details/5
+    //public async Task<IActionResult> Details(int? id)
+    //{
+    //    if (id == null)
+    //    {
+    //        return NotFound();
+    //    }
+
+    //    var department = await _context.Departments
+    //        .Include(d => d.Administrator)
+    //        .AsNoTracking()
+    //        .FirstOrDefaultAsync(m => m.DepartmentID == id);
+    //    if (department == null)
+    //    {
+    //        return NotFound();
+    //    }
+
+    //    return View(department);
+    //}
+
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+          if (id == null)
+          {
+            return NotFound();
+          }
 
-            var department = await _context.Departments
-                .Include(d => d.Administrator)
-                .AsNoTracking()
-                .FirstOrDefaultAsync(m => m.DepartmentID == id);
-            if (department == null)
-            {
-                return NotFound();
-            }
+          FormattableString query = $"SELECT * FROM Department WHERE DepartmentID = {id}";
+          var department = await _context.Departments
+              .FromSql(query)
+              .Include(d => d.Administrator)
+              .AsNoTracking()
+              .FirstOrDefaultAsync();
 
-            return View(department);
+          if (department == null)
+          {
+            return NotFound();
+          }
+
+          return View(department);
         }
 
         // GET: Departments/Create
