@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Contoso_MVC_8_0_VS2022.Migrations
 {
     [DbContext(typeof(SchoolContext))]
-    [Migration("20240221131937_RowVersion")]
-    partial class RowVersion
+    [Migration("20240222193625_Inheritance")]
+    partial class Inheritance
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -121,33 +121,6 @@ namespace Contoso_MVC_8_0_VS2022.Migrations
                     b.ToTable("Enrollment", (string)null);
                 });
 
-            modelBuilder.Entity("Contoso_MVC_8_0_VS2022.Models.Instructor", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<string>("FirstMidName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("FirstName");
-
-                    b.Property<DateTime>("HireDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Instructor", (string)null);
-                });
-
             modelBuilder.Entity("Contoso_MVC_8_0_VS2022.Models.OfficeAssignment", b =>
                 {
                     b.Property<int>("InstructorID")
@@ -162,7 +135,7 @@ namespace Contoso_MVC_8_0_VS2022.Migrations
                     b.ToTable("OfficeAssignment", (string)null);
                 });
 
-            modelBuilder.Entity("Contoso_MVC_8_0_VS2022.Models.Student", b =>
+            modelBuilder.Entity("Contoso_MVC_8_0_VS2022.Models.Person", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -170,8 +143,10 @@ namespace Contoso_MVC_8_0_VS2022.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<DateTime>("EnrollmentDate")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(13)
+                        .HasColumnType("nvarchar(13)");
 
                     b.Property<string>("FirstMidName")
                         .IsRequired()
@@ -186,7 +161,35 @@ namespace Contoso_MVC_8_0_VS2022.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Student", (string)null);
+                    b.ToTable("Person", (string)null);
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Person");
+
+                    b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("Contoso_MVC_8_0_VS2022.Models.Instructor", b =>
+                {
+                    b.HasBaseType("Contoso_MVC_8_0_VS2022.Models.Person");
+
+                    b.Property<DateTime>("HireDate")
+                        .HasColumnType("datetime2");
+
+                    b.ToTable("Person", (string)null);
+
+                    b.HasDiscriminator().HasValue("Instructor");
+                });
+
+            modelBuilder.Entity("Contoso_MVC_8_0_VS2022.Models.Student", b =>
+                {
+                    b.HasBaseType("Contoso_MVC_8_0_VS2022.Models.Person");
+
+                    b.Property<DateTime>("EnrollmentDate")
+                        .HasColumnType("datetime2");
+
+                    b.ToTable("Person", (string)null);
+
+                    b.HasDiscriminator().HasValue("Student");
                 });
 
             modelBuilder.Entity("Contoso_MVC_8_0_VS2022.Models.Course", b =>

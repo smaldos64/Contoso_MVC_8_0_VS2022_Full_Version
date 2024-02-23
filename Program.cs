@@ -60,7 +60,6 @@ namespace Contoso_MVC_8_0_VS2022
             using (var scope = app.Services.CreateScope())
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<SchoolContext>();
-                dbContext.Database.EnsureCreated();
                 DbInitializer.Initialize(dbContext);
             }
         }

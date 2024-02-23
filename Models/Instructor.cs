@@ -5,20 +5,20 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Contoso_MVC_8_0_VS2022.Models
 {
-  public class Instructor
+  public class Instructor : Person
   {
-    public int ID { get; set; }
+    //public int ID { get; set; }
 
-    [Required]
-    [Display(Name = "Last Name")]
-    [StringLength(50)]
-    public string ?LastName { get; set; }
+    //[Required]
+    //[Display(Name = "Last Name")]
+    //[StringLength(50)]
+    //public string ?LastName { get; set; }
 
-    [Required]
-    [Column("FirstName")]
-    [Display(Name = "First Name")]
-    [StringLength(50)]
-    public string ?FirstMidName { get; set; }
+    //[Required]
+    //[Column("FirstName")]
+    //[Display(Name = "First Name")]
+    //[StringLength(50)]
+    //public string ?FirstMidName { get; set; }
 
     [DataType(DataType.Date)]
     [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]

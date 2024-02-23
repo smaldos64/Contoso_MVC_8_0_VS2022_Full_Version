@@ -86,7 +86,7 @@ namespace Contoso_MVC_8_0_VS2022.Data
   {
     public static void Initialize(SchoolContext context)
     {
-      //context.Database.EnsureCreated();
+      context.Database.EnsureCreated();
 
       // Look for any students.
       if (context.Students.Any())
