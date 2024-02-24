@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Contoso_MVC_8_0_VS2022.DAL;
 
 namespace Contoso_MVC_8_0_VS2022
 {
@@ -21,6 +22,10 @@ namespace Contoso_MVC_8_0_VS2022
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
             // Kræver installation af Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore
             // pakke !!!
+            // ==> LTPE
+
+            // LTPE ==>
+            builder.Services.AddScoped<IStudentRepository, StudentRepository>();
             // ==> LTPE
 
             // Add services to the container.
