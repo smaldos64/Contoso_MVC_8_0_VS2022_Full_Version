@@ -33,7 +33,7 @@ namespace Contoso_MVC_8_0_VS2022.DAL
       .Include(s => s.Enrollments)
         .ThenInclude(e => e.Course)
         .AsNoTracking()
-        .FirstOrDefaultAsync(m => m.ID == id);
+        .FirstOrDefault(m => m.ID == id);
     }
 
     public void InsertStudent(Student student)
@@ -49,12 +49,13 @@ namespace Contoso_MVC_8_0_VS2022.DAL
 
     public void UpdateStudent(Student student)
     {
+      // LTPE
       context.Entry(student).State = EntityState.Modified;
     }
 
     public void Save()
     {
-      context.SaveChanges();
+      context.SaveChanges(); 
     }
 
     private bool disposed = false;
