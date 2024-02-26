@@ -1,6 +1,7 @@
 ﻿using Contoso_MVC_8_0_VS2022.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Contoso_MVC_8_0_VS2022.DAL
 {
@@ -18,7 +19,8 @@ namespace Contoso_MVC_8_0_VS2022.DAL
     public virtual IEnumerable<TEntity> Get(
         Expression<Func<TEntity, bool>> filter = null,
         Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-        string includeProperties = "")
+        string includeProperties = "",
+        int Id = 0)
     {
       IQueryable<TEntity> query = dbSet;
 
@@ -46,6 +48,50 @@ namespace Contoso_MVC_8_0_VS2022.DAL
     public virtual TEntity GetByID(object id)
     {
       return dbSet.Find(id);
+    }
+
+    // LTPE
+    public virtual TEntity GetByFilter(Expression<Func<TEntity, bool>> filter,
+                                       string includeProperties = "")
+    {
+      IQueryable<TEntity> query = dbSet;
+
+      foreach (var includeProperty in includeProperties.Split
+          (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+      {
+        query = query.Include(includeProperty);
+      }
+
+      return query.SingleOrDefault(filter);
+
+      //var queryFindOne = dbSet.Find(id);
+
+      //if (null != queryFindOne)
+      //{
+      //  foreach (var includeProperty in includeProperties.Split
+      //    (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+      //  {
+      //    context.Entry(queryFindOne).Collection(ent => ent.)
+      //    query = query.Include(includeProperty);
+      //  }
+      //}
+      //IQueryable<TEntity> query = queryFindOne as IQueryable<TEntity>;
+
+      //foreach (var includeProperty in includeProperties.Split
+      //    (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+      //{
+      //  query = query.Include(includeProperty);
+      //}
+
+      //TEntity queryToReturn = query.FirstOrDefault();
+      //if (queryToReturn != null)
+      //{
+      //  return queryToReturn;
+      //}
+      //else
+      //{
+      //  return null;
+      //}
     }
 
     public virtual void Insert(TEntity entity)

@@ -39,7 +39,14 @@ namespace Contoso_MVC_8_0_VS2022.Controllers
 
       public ViewResult Details(int id)
       {
-         Course course = unitOfWork.CourseRepository.GetByID(id);
+         // LTPE
+         //Course course = unitOfWork.CourseRepository.GetByID(id);
+
+         //var course = unitOfWork.CourseRepository.Get(includeProperties: "Department", filter: co => co.CourseID == id, Id: id);
+         //return View(course.FirstOrDefault());
+
+         Course course = unitOfWork.CourseRepository.GetByFilter(filter: co => co.CourseID == id,
+                                                                 includeProperties: "Department");
          return View(course);
       }
 
