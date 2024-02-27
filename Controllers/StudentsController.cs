@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ContosoUniversity.Controllers
 {
-  public class StudentController : Controller
+  public class StudentsController : Controller
   {
     private IStudentRepository studentRepository;
     //private SchoolContext context;
@@ -23,7 +23,7 @@ namespace ContosoUniversity.Controllers
     //}
 
     //public StudentController(IStudentRepository studentRepository, SchoolContext context)
-    public StudentController(IStudentRepository studentRepository)
+    public StudentsController(IStudentRepository studentRepository)
     {
       this.studentRepository = studentRepository;
       //this.context = context; 

@@ -20,12 +20,11 @@ namespace Contoso_MVC_8_0_VS2022.DAL
       return context.Students.ToList();
     }
 
-    //public IQueryable<Student> GetStudents()
-    //{
-    //  //return context.Students.ToList();
-    //  // LTPE
-    //  return context.Students;
-    //}
+    // LTPE
+    public IQueryable<Student> GetStudentsIQueryable()
+    {
+      return context.Students;
+    }
 
     public Student GetStudentByID(int id)
     {

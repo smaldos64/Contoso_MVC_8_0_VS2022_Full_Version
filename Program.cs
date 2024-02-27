@@ -26,10 +26,11 @@ namespace Contoso_MVC_8_0_VS2022
 
             // LTPE ==>
             builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+            builder.Services.AddScoped<IStudentRepositoryAsync, StudentRepositoryAsync>();
             // ==> LTPE
 
-            // Add services to the container.
-            builder.Services.AddControllersWithViews();
+      // Add services to the container.
+      builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
 
