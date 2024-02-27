@@ -6,7 +6,8 @@ namespace Contoso_MVC_8_0_VS2022.DAL
 {
   public interface IStudentRepository : IDisposable
   {
-    IQueryable<Student> GetStudents();
+    IEnumerable<Student> GetStudents();
+    //IQueryable<Student> GetStudents();
     Student GetStudentByID(int studentId);
     void InsertStudent(Student student);
     void DeleteStudent(int studentID);

@@ -63,35 +63,6 @@ namespace Contoso_MVC_8_0_VS2022.DAL
       }
 
       return query.SingleOrDefault(filter);
-
-      //var queryFindOne = dbSet.Find(id);
-
-      //if (null != queryFindOne)
-      //{
-      //  foreach (var includeProperty in includeProperties.Split
-      //    (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-      //  {
-      //    context.Entry(queryFindOne).Collection(ent => ent.)
-      //    query = query.Include(includeProperty);
-      //  }
-      //}
-      //IQueryable<TEntity> query = queryFindOne as IQueryable<TEntity>;
-
-      //foreach (var includeProperty in includeProperties.Split
-      //    (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-      //{
-      //  query = query.Include(includeProperty);
-      //}
-
-      //TEntity queryToReturn = query.FirstOrDefault();
-      //if (queryToReturn != null)
-      //{
-      //  return queryToReturn;
-      //}
-      //else
-      //{
-      //  return null;
-      //}
     }
 
     public virtual void Insert(TEntity entity)

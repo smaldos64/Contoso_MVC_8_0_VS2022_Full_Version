@@ -8,27 +8,36 @@ using Contoso_MVC_8_0_VS2022.DAL;
 using Contoso_MVC_8_0_VS2022.Data;
 using Contoso_MVC_8_0_VS2022.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ContosoUniversity.Controllers
 {
   public class StudentController : Controller
   {
     private IStudentRepository studentRepository;
+    //private SchoolContext context;
 
     //public StudentController()
     //{
     //  this.studentRepository = new StudentRepository(new SchoolContext());
     //}
 
+    //public StudentController(IStudentRepository studentRepository, SchoolContext context)
     public StudentController(IStudentRepository studentRepository)
     {
       this.studentRepository = studentRepository;
+      //this.context = context; 
     }
 
     //
     // GET: /Student/
+    public async Task<IActionResult> Index(
+          string sortOrder,
+          string currentFilter,
+          string searchString,
+          int? pageNumber)
 
-    public ViewResult Index(string sortOrder, string currentFilter, string searchString, int? pageNumber)
+    //public ViewResult Index(string sortOrder, string currentFilter, string searchString, int? pageNumber)
     {
       ViewBag.CurrentSort = sortOrder;
       ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
@@ -46,6 +55,9 @@ namespace ContosoUniversity.Controllers
 
       var students = from s in studentRepository.GetStudents()
                      select s;
+      //IQueryable<Student> students1 = from s in context.Students
+      //                                select s;
+
       if (!String.IsNullOrEmpty(searchString))
       {
         students = students.Where(s => s.LastName.ToUpper().Contains(searchString.ToUpper())
@@ -66,22 +78,19 @@ namespace ContosoUniversity.Controllers
           students = students.OrderBy(s => s.LastName);
           break;
       }
-
       int pageSize = 3;
-      int ?currentPage = (pageNumber ?? 1);
-      //return View(students.ToPagedList(pageNumber, pageSize));
-      //return View(students);
-      try
-      {
-        //return View(PaginatedList<Student>.CreateAsync(students as IQueryable<Student>,
-        //    currentPage ?? 1, pageSize));
-        return View(new PaginatedList<Student>(students.ToList(), students.Count(), 1, students.Count()));
-      }
-      catch (Exception ex) 
-      {
-        string ErrorString = ex.ToString();
-        return View();
-      }
+      // LTPE : Når der returneres en IEnumerable list fra StudentRepository, er 
+      // Vi nødt til at lave en "kunstig" IQueryable liste her for at få koden 
+      // i PaginatedList.cs til at virke. Vi er dog også nødt til at lave et par
+      // små ændringer i metoden CreateAsync i PaginatedList.cs for at få
+      // tingene til at virke korrekt. Netop på grund af at den IQueryable
+      // liste vi får lavet her som før nævnt er "kunstig".
+      // Me af hensyn til at kunne lave automatiseret test af vores repositories er vi
+      // nødt til at returnere IEnumerable lister og ikke IQueryable lister fra
+      // metoderne i vores Repositories !!!
+      IQueryable<Student> studentsIQueryable = students.AsQueryable<Student>();
+      return View(await PaginatedList<Student>.CreateAsync(studentsIQueryable, pageNumber ?? 1, pageSize));
+      //return View(await PaginatedList<Student>.CreateAsync(students, pageNumber ?? 1, pageSize));
     }
 
     //

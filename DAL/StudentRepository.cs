@@ -14,20 +14,22 @@ namespace Contoso_MVC_8_0_VS2022.DAL
       this.context = context;
     }
 
-    //public IEnumerable<Student> GetStudents()
-    //{
-    //  return context.Students.ToList();
-    //}
-
-    public IQueryable<Student> GetStudents()
+    // LTPE Dette er metoden fra guiden !!!
+    public IEnumerable<Student> GetStudents()
     {
-      //return context.Students.ToList();
-      // LTPE
-      return context.Students;
+      return context.Students.ToList();
     }
+
+    //public IQueryable<Student> GetStudents()
+    //{
+    //  //return context.Students.ToList();
+    //  // LTPE
+    //  return context.Students;
+    //}
 
     public Student GetStudentByID(int id)
     {
+      // LTPE
       //return context.Students.Find(id);
       return context.Students
       .Include(s => s.Enrollments)
