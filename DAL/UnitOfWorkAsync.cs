@@ -3,24 +3,23 @@ using Contoso_MVC_8_0_VS2022.Models;
 
 namespace Contoso_MVC_8_0_VS2022.DAL
 {
-  public class UnitOfWorkAsync : IDisposable
+  public class UnitOfWorkAsync : IUnitOfWorkAsync, IDisposable
   {
     // LTPE
     private SchoolContext context;
     //private SchoolContext context = new SchoolContext();
-    private GenericRepositoryAsync<Department> departmentRepositoryAsync;
-    private GenericRepositoryAsync<Course> courseRepositoryAsync;
+    private IGenericRepositoryAsync<Department> departmentRepositoryAsync;
+    private IGenericRepositoryAsync<Course> courseRepositoryAsync;
 
     public UnitOfWorkAsync(SchoolContext context)
     {
       this.context = context;
     }
 
-    public GenericRepositoryAsync<Department> DepartmentRepositoryAsync
+    public IGenericRepositoryAsync<Department> DepartmentRepositoryAsync
     {
       get
       {
-
         if (this.departmentRepositoryAsync == null)
         {
           this.departmentRepositoryAsync = new GenericRepositoryAsync<Department>(context);
@@ -29,11 +28,10 @@ namespace Contoso_MVC_8_0_VS2022.DAL
       }
     }
 
-    public GenericRepositoryAsync<Course> CourseRepository
+    public IGenericRepositoryAsync<Course> CourseRepository
     {
       get
       {
-
         if (this.courseRepositoryAsync == null)
         {
           this.courseRepositoryAsync = new GenericRepositoryAsync<Course>(context);

@@ -28,7 +28,7 @@ namespace Contoso_MVC_8_0_VS2022.Controllers
     //
     // GET: /Course/
 
-    public ViewResult Index()
+      public ViewResult Index()
       {
          var courses = unitOfWork.CourseRepository.Get(includeProperties: "Department");
          return View(courses.ToList());
@@ -64,7 +64,7 @@ namespace Contoso_MVC_8_0_VS2022.Controllers
       public ActionResult Create(
           // LTPE
           [Bind("CourseID,Title,Credits,DepartmentID")]
-         Course course)
+          Course course)
       {
          try
          {
