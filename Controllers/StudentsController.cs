@@ -85,7 +85,7 @@ namespace ContosoUniversity.Controllers
       // små ændringer i metoden CreateAsync i PaginatedList.cs for at få
       // tingene til at virke korrekt. Netop på grund af at den IQueryable
       // liste vi får lavet her som før nævnt er "kunstig".
-      // Me af hensyn til at kunne lave automatiseret test af vores repositories er vi
+      // Men af hensyn til at kunne lave automatiseret test af vores repositories er vi
       // nødt til at returnere IEnumerable lister og ikke IQueryable lister fra
       // metoderne i vores Repositories !!!
       IQueryable<Student> studentsIQueryable = students.AsQueryable<Student>();

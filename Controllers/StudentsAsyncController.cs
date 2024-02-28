@@ -14,13 +14,20 @@ namespace Contoso_MVC_8_0_VS2022.Controllers
 {
   public class StudentsAsyncController : Controller
   {
-    private readonly SchoolContext _context;
+    //private readonly SchoolContext _context;
     private IStudentRepositoryAsync studentRepositoryAsync;
+    private IUnitOfWorkAsync unitOfWorkAsync;
 
-    public StudentsAsyncController(IStudentRepositoryAsync studentRepositoryAsync, SchoolContext context)
+    //public StudentsAsyncController(IStudentRepositoryAsync studentRepositoryAsync, SchoolContext context)
+    //{
+    //  this.studentRepositoryAsync = studentRepositoryAsync;
+    //  //this._context = context;
+    //}
+
+    public StudentsAsyncController(IStudentRepositoryAsync studentRepositoryAsync, IUnitOfWorkAsync unitOfWorkAsync)
     {
       this.studentRepositoryAsync = studentRepositoryAsync;
-      this._context = context;
+      this.unitOfWorkAsync = unitOfWorkAsync;
     }
 
     public async Task<IActionResult> Index(
@@ -46,9 +53,11 @@ namespace Contoso_MVC_8_0_VS2022.Controllers
 
       ViewData["CurrentFilter"] = searchString;
 
-      var students = from s in await studentRepositoryAsync.GetStudents()
-                        select s;
-      
+      //var students = from s in await studentRepositoryAsync.GetStudents()
+      //               select s;
+
+      var students = await unitOfWorkAsync.StudentRepository.Get();
+
       if (!String.IsNullOrEmpty(searchString))
       {
         students = students.Where(s => s.LastName.Contains(searchString)

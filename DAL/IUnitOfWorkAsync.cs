@@ -8,6 +8,10 @@ namespace Contoso_MVC_8_0_VS2022.DAL
 
     IGenericRepositoryAsync<Course> CourseRepository { get; }
 
+    IGenericRepositoryAsync<Student> StudentRepository { get;}
+
+    public ICourseRepositoryAsync CourseRepositoryOwnAsync { get;}
+
     void Save();
   }
 }

@@ -25,6 +25,7 @@ namespace Contoso_MVC_8_0_VS2022
             // ==> LTPE
 
             // LTPE ==>
+            // Interface, Klasse
             builder.Services.AddScoped<IStudentRepository, StudentRepository>();
             builder.Services.AddScoped<IStudentRepositoryAsync, StudentRepositoryAsync>();
             builder.Services.AddScoped<IUnitOfWorkAsync, UnitOfWorkAsync>();

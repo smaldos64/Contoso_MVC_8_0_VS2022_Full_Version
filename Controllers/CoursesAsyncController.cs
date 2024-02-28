@@ -25,7 +25,10 @@ namespace Contoso_MVC_8_0_VS2022.Controllers
     // GET: Courses
     public async Task<IActionResult> Index()
     {
-      var courses = await unitOfWorkAsync.CourseRepository.Get(includeProperties: "Department");
+      //var courses = await unitOfWorkAsync.CourseRepository.Get(includeProperties: "Department");
+      var courses = await unitOfWorkAsync.CourseRepositoryOwnAsync.GetAllCourses(includeProperties: "Department");
+      
+      var courses1 = await unitOfWorkAsync.CourseRepositoryOwnAsync.GetAllInterestingCourses();
       return View(courses);
     }
 

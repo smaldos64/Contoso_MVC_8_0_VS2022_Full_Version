@@ -10,6 +10,9 @@ namespace Contoso_MVC_8_0_VS2022.DAL
     //private SchoolContext context = new SchoolContext();
     private IGenericRepositoryAsync<Department> departmentRepositoryAsync;
     private IGenericRepositoryAsync<Course> courseRepositoryAsync;
+    private IGenericRepositoryAsync<Student> studentRepositoryAsync;
+
+    private ICourseRepositoryAsync courseRepositoryOwnAsync;
 
     public UnitOfWorkAsync(SchoolContext context)
     {
@@ -37,6 +40,31 @@ namespace Contoso_MVC_8_0_VS2022.DAL
           this.courseRepositoryAsync = new GenericRepositoryAsync<Course>(context);
         }
         return courseRepositoryAsync;
+      }
+    }
+
+    public IGenericRepositoryAsync<Student> StudentRepository
+    {
+      get
+      {
+        if (this.studentRepositoryAsync == null)
+        {
+          this.studentRepositoryAsync = new GenericRepositoryAsync<Student>(context);
+        }
+        return studentRepositoryAsync;
+      }
+    }
+
+    public ICourseRepositoryAsync CourseRepositoryOwnAsync 
+    {
+      get
+      {
+        if (null == courseRepositoryOwnAsync)
+        {
+          courseRepositoryOwnAsync = new CourseRepositoryAsync(context);
+        }
+
+        return (courseRepositoryOwnAsync);
       }
     }
 
