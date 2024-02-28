@@ -4,7 +4,7 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit Async</h1>
+<h1>Edit</h1>
 
 <h4>Course</h4>
 <hr />
@@ -13,10 +13,6 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="CourseID" />
-            <div class="form-group">
-              <label asp-for="CourseID" class="control-label"></label>
-              <div>@Html.DisplayFor(model => model.CourseID)</div>
-            </div>
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
                 <input asp-for="Title" class="form-control" />
@@ -27,22 +23,11 @@
                 <input asp-for="Credits" class="form-control" />
                 <span asp-validation-for="Credits" class="text-danger"></span>
             </div>
-            @* <div class="form-group">
+            <div class="form-group">
                 <label asp-for="DepartmentID" class="control-label"></label>
                 <select asp-for="DepartmentID" class="form-control" asp-items="ViewBag.DepartmentID"></select>
                 <span asp-validation-for="DepartmentID" class="text-danger"></span>
-            </div> *@
-            <div class="form-group">
-              <label asp-for="Department" class="control-label"></label>
-              <select asp-for="DepartmentID" class="form-control" asp-items="ViewBag.DepartmentID">
-                <option value="">-- Select Department --</option>
-              </select>
-              <span asp-validation-for="DepartmentID" class="text-danger" />
             </div>
-            @* <div class="form-group">
-              <label asp-for="CourseID" class="control-label"></label>
-              <div>@Html.DisplayFor(model => model.CourseID)</div>
-            </div> *@
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>

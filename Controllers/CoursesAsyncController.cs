@@ -48,9 +48,9 @@ namespace Contoso_MVC_8_0_VS2022.Controllers
     }
 
     // GET: Courses/Create
-    public IActionResult Create()
+    public async Task <IActionResult> Create()
     {
-      PopulateDepartmentsDropDownList();
+      await PopulateDepartmentsDropDownList();
       return View();
     }
 
@@ -68,7 +68,7 @@ namespace Contoso_MVC_8_0_VS2022.Controllers
         return RedirectToAction("Index");
       }
 
-      PopulateDepartmentsDropDownList(course.DepartmentID);
+      await PopulateDepartmentsDropDownList(course.DepartmentID);
       return View(course);
     }
 
@@ -86,80 +86,9 @@ namespace Contoso_MVC_8_0_VS2022.Controllers
         return NotFound();
       }
 
-      PopulateDepartmentsDropDownList(course.DepartmentID);
+      await PopulateDepartmentsDropDownList(course.DepartmentID);
       return View(course);
     }
-
-    // POST: Courses/Edit/5
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-    //[HttpPost]
-    //[ValidateAntiForgeryToken]
-    //public async Task<IActionResult> Edit(int id, [Bind("CourseID,Title,Credits,DepartmentID")] Course course)
-    //{
-    //  if (id != course.CourseID)
-    //  {
-    //    return NotFound();
-    //  }
-
-    //  // LTPE !!!
-    //  //if (ModelState.IsValid)
-    //  //{
-    //    try
-    //    {
-    //      _context.Update(course);
-    //      await _context.SaveChangesAsync();
-    //    }
-    //    catch (DbUpdateConcurrencyException)
-    //    {
-    //      if (!CourseExists(course.CourseID))
-    //      {
-    //        return NotFound();
-    //      }
-    //      else
-    //      {
-    //        throw;
-    //      }
-    //    }
-    //    return RedirectToAction(nameof(Index));
-    //  //}
-    //  ////ViewData["DepartmentID"] = new SelectList(_context.Departments, "DepartmentID", "DepartmentID", course.DepartmentID);
-    //  //PopulateDepartmentsDropDownList(course.DepartmentID);
-    //  //return View(course);
-    //}
-
-    //[HttpPost, ActionName("Edit")]
-    //[ValidateAntiForgeryToken]
-    //public async Task<IActionResult> EditPost(int? id)
-    //{
-    //  if (id == null)
-    //  {
-    //    return NotFound();
-    //  }
-
-    //  var courseToUpdate = await _context.Courses
-    //      .FirstOrDefaultAsync(c => c.CourseID == id);
-
-    //  if (await TryUpdateModelAsync<Course>(courseToUpdate,
-    //      "",
-    //      c => c.Credits, c => c.DepartmentID, c => c.Title))
-    //  {
-    //    try
-    //    {
-    //      await _context.SaveChangesAsync();
-    //    }
-    //    catch (DbUpdateException /* ex */)
-    //    {
-    //      //Log the error (uncomment ex variable name and write a log.)
-    //      ModelState.AddModelError("", "Unable to save changes. " +
-    //          "Try again, and if the problem persists, " +
-    //          "see your system administrator.");
-    //    }
-    //    return RedirectToAction(nameof(Index));
-    //  }
-    //  PopulateDepartmentsDropDownList(courseToUpdate.DepartmentID);
-    //  return View(courseToUpdate);
-    //}
 
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -182,7 +111,7 @@ namespace Contoso_MVC_8_0_VS2022.Controllers
         //Log the error (uncomment dex variable name after DataException and add a line here to write a log.)
         ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, see your system administrator.");
       }
-      PopulateDepartmentsDropDownList(course.DepartmentID);
+      await PopulateDepartmentsDropDownList(course.DepartmentID);
       return View(course);
     }
 
