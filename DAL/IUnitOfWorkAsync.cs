@@ -12,6 +12,6 @@ namespace Contoso_MVC_8_0_VS2022.DAL
 
     public ICourseRepositoryAsync CourseRepositoryOwnAsync { get;}
 
-    void Save();
+    Task Save();
   }
 }

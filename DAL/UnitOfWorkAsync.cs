@@ -68,9 +68,9 @@ namespace Contoso_MVC_8_0_VS2022.DAL
       }
     }
 
-    public void Save()
+    public async Task Save()
     {
-      context.SaveChanges();
+      await context.SaveChangesAsync();
     }
 
     private bool disposed = false;
